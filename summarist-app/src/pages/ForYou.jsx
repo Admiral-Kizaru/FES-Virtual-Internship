@@ -114,215 +114,180 @@ function ForYou() {
 
         {/* SELECTED BOOK */}
 
-        {selectedBook && (
-          <section
-            style={{
-              marginBottom: "48px",
-            }}
-          >
-            <h1>Selected For You</h1>
+{selectedBook && (
+  <section
+    style={{
+      marginBottom: "64px",
+    }}
+  >
+    <h2 className="section__title">
+      Selected For You
+    </h2>
 
-            <Link
-              to={`/book/${selectedBook.id}`}
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  gap: "24px",
-                  marginTop: "24px",
-                  alignItems: "center",
-                }}
-              >
-                <img
-                  src={selectedBook.imageLink}
-                  alt={selectedBook.title}
-                  style={{
-                    width: "220px",
-                    borderRadius: "8px",
-                  }}
-                />
+    <p className="section__subtitle">
+      Curated based on your interests
+    </p>
 
-                <div>
-                  <h2>
-                    {selectedBook.title}
-                  </h2>
+    <Link
+  to="/book/1"
+  className="selected__book--link"
+      style={{
+        textDecoration: "none",
+        color: "inherit",
+      }}
+    >
+      <div className="selected__book">
+        <img
+          className="selected__book--img"
+          src={
+            selectedBook.imageLink ||
+            "https://covers.openlibrary.org/b/id/10523338-L.jpg"
+          }
+          alt={selectedBook.title}
+        />
 
-                  <h3>
-                    {selectedBook.author}
-                  </h3>
+        <div className="selected__book--content">
+          <div className="selected__book--badge">
+            Editor's Pick
+          </div>
 
-                  <p>
-                    {selectedBook.subTitle}
-                  </p>
+          <h2 className="selected__book--title">
+            {selectedBook.title}
+          </h2>
 
-                  {selectedBook.subscriptionRequired && (
-                    <div
-                      style={{
-                        background: "gold",
-                        color: "black",
-                        display: "inline-block",
-                        padding:
-                          "4px 12px",
-                        borderRadius:
-                          "999px",
-                        marginTop: "12px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Premium
-                    </div>
-                  )}
-                </div>
-              </div>
-            </Link>
-          </section>
-        )}
+          <h3 className="selected__book--author">
+            {selectedBook.author}
+          </h3>
+
+          <p className="selected__book--subtitle">
+            {selectedBook.subTitle}
+          </p>
+
+          <div className="book__details">
+            <span>
+              ⭐{" "}
+              {selectedBook.averageRating}
+            </span>
+
+            <span>
+              {selectedBook.subscriptionRequired
+                ? "Premium"
+                : "Free"}
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  </section>
+)}
 
         {/* RECOMMENDED BOOKS */}
 
-        <section
-          style={{
-            marginBottom: "48px",
-          }}
-        >
-          <h1>Recommended</h1>
+<section
+  style={{
+    marginBottom: "64px",
+  }}
+>
+  <h2 className="section__title">
+    Recommended For You
+  </h2>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fill, minmax(220px, 1fr))",
-              gap: "24px",
-              marginTop: "24px",
-            }}
-          >
-            {recommendedBooks.map((book) => (
-              <Link
-                key={book.id}
-                to={`/book/${book.id}`}
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                }}
-              >
-                <div>
-                  <img
-                    src={book.imageLink}
-                    alt={book.title}
-                    style={{
-                      width: "100%",
-                      borderRadius: "8px",
-                    }}
-                  />
+  <p className="section__subtitle">
+    We think you'll like these
+  </p>
 
-                  <h3
-                    style={{
-                      marginTop: "12px",
-                    }}
-                  >
-                    {book.title}
-                  </h3>
+  <div className="books__grid">
+    {recommendedBooks.map((book) => (
+      <Link
+        key={book.id}
+        to={`/book/${book.id}`}
+        style={{
+          textDecoration: "none",
+          color: "inherit",
+        }}
+      >
+        <div className="book__card">
+          <img
+            src={book.imageLink}
+            alt={book.title}
+          />
 
-                  <p>{book.author}</p>
-
-                  {book.subscriptionRequired && (
-                    <div
-                      style={{
-                        background:
-                          "gold",
-                        color: "black",
-                        display:
-                          "inline-block",
-                        padding:
-                          "4px 12px",
-                        borderRadius:
-                          "999px",
-                        marginTop: "8px",
-                        fontWeight:
-                          "bold",
-                      }}
-                    >
-                      Premium
-                    </div>
-                  )}
-                </div>
-              </Link>
-            ))}
+          <div className="book__title">
+            {book.title}
           </div>
-        </section>
 
-        {/* SUGGESTED BOOKS */}
-
-        <section>
-          <h1>Suggested</h1>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fill, minmax(220px, 1fr))",
-              gap: "24px",
-              marginTop: "24px",
-            }}
-          >
-            {suggestedBooks.map((book) => (
-              <Link
-                key={book.id}
-                to={`/book/${book.id}`}
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                }}
-              >
-                <div>
-                  <img
-                    src={book.imageLink}
-                    alt={book.title}
-                    style={{
-                      width: "100%",
-                      borderRadius: "8px",
-                    }}
-                  />
-
-                  <h3
-                    style={{
-                      marginTop: "12px",
-                    }}
-                  >
-                    {book.title}
-                  </h3>
-
-                  <p>{book.author}</p>
-
-                  {book.subscriptionRequired && (
-                    <div
-                      style={{
-                        background:
-                          "gold",
-                        color: "black",
-                        display:
-                          "inline-block",
-                        padding:
-                          "4px 12px",
-                        borderRadius:
-                          "999px",
-                        marginTop: "8px",
-                        fontWeight:
-                          "bold",
-                      }}
-                    >
-                      Premium
-                    </div>
-                  )}
-                </div>
-              </Link>
-            ))}
+          <div className="book__author">
+            {book.author}
           </div>
-        </section>
+
+          <div className="book__details">
+            <span>
+              ⭐ {book.averageRating}
+            </span>
+
+            <span>
+              {book.subscriptionRequired
+                ? "Premium"
+                : "Free"}
+            </span>
+          </div>
+        </div>
+      </Link>
+    ))}
+  </div>
+</section>
+
+{/* SUGGESTED BOOKS */}
+
+<section>
+  <h2 className="section__title">
+    Suggested Books
+  </h2>
+
+  <p className="section__subtitle">
+    Hand-picked reads for you
+  </p>
+
+  <div className="books__grid">
+    {suggestedBooks.map((book) => (
+      <Link
+        key={book.id}
+        to={`/book/${book.id}`}
+        style={{
+          textDecoration: "none",
+          color: "inherit",
+        }}
+      >
+        <div className="book__card">
+          <img
+            src={book.imageLink}
+            alt={book.title}
+          />
+
+          <div className="book__title">
+            {book.title}
+          </div>
+
+          <div className="book__author">
+            {book.author}
+          </div>
+
+          <div className="book__details">
+            <span>
+              ⭐ {book.averageRating}
+            </span>
+
+            <span>
+              {book.subscriptionRequired
+                ? "Premium"
+                : "Free"}
+            </span>
+          </div>
+        </div>
+      </Link>
+    ))}
+  </div>
+</section>
       </div>
     </>
   );

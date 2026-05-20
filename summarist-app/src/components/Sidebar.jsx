@@ -1,34 +1,76 @@
+import {
+  FaHome,
+  FaBookmark,
+  FaCog,
+  FaSearch,
+  FaCrown,
+  FaHeadphones,
+} from "react-icons/fa";
+
 import { Link } from "react-router-dom";
+
 import { useAuth } from "../context/AuthContext";
 
 function Sidebar() {
-  const { user, logout, openAuthModal } = useAuth();
+  const { user, logout, openAuthModal } =
+    useAuth();
 
   return (
     <div className="sidebar">
-      <h2 className="sidebar__logo">Summarist</h2>
+      <div>
+        <div className="sidebar__logo">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
+            alt="logo"
+          />
 
-      <div className="sidebar__links">
-        <Link to="/for-you">For You</Link>
+          <h2>Summarist</h2>
+        </div>
 
-        <Link to="/library">Library</Link>
+        <div className="sidebar__links">
+          <Link to="/for-you">
+            <FaHome />
+            <span>For You</span>
+          </Link>
 
-        <span className="sidebar__disabled">Highlights</span>
+          <Link to="/library">
+            <FaBookmark />
+            <span>My Library</span>
+          </Link>
 
-        <span className="sidebar__disabled">Search</span>
+          <span className="sidebar__disabled">
+            <FaHeadphones />
+            <span>Highlights</span>
+          </span>
 
-        <Link to="/settings">Settings</Link>
+          <span className="sidebar__disabled">
+            <FaSearch />
+            <span>Search</span>
+          </span>
 
-        <span className="sidebar__disabled">Help & Support</span>
+          <Link to="/settings">
+            <FaCog />
+            <span>Settings</span>
+          </Link>
 
-        <Link to="/choose-plan">Choose Plan</Link>
+          <Link to="/choose-plan">
+            <FaCrown />
+            <span>Choose Plan</span>
+          </Link>
+        </div>
       </div>
 
       <div className="sidebar__bottom">
         {user ? (
-          <button onClick={logout}>Logout</button>
+          <button onClick={logout}>
+            Logout
+          </button>
         ) : (
-          <button onClick={() => openAuthModal("login")}>
+          <button
+            onClick={() =>
+              openAuthModal("login")
+            }
+          >
             Login
           </button>
         )}

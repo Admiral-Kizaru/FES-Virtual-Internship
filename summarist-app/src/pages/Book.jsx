@@ -83,16 +83,48 @@ function Book() {
   }
 
   if (!book) {
-    return (
-      <>
-        <Sidebar />
+  return (
+    <>
+      <Sidebar />
 
-        <div className="page">
-          <h1>Book not found</h1>
+      <div className="page">
+        <div className="book-page">
+          <img
+            src="https://images-na.ssl-images-amazon.com/images/I/91bYsX41DVL.jpg"
+            alt="Atomic Habits"
+            style={{
+              width: "300px",
+              marginBottom: "20px",
+            }}
+          />
+
+          <h1>Atomic Habits</h1>
+
+          <h2>James Clear</h2>
+
+          <p>
+            Tiny Changes, Remarkable
+            Results
+          </p>
+
+          <p>
+            An easy and proven way to
+            build good habits and break
+            bad ones.
+          </p>
+
+          <button>
+            Read
+          </button>
+
+          <button>
+            Listen
+          </button>
         </div>
-      </>
-    );
-  }
+      </div>
+    </>
+  );
+}
 
   const handleReadListen = () => {
     if (!user) {

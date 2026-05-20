@@ -32,8 +32,16 @@ function Home() {
       <nav className="nav">
         <div className="nav__wrapper">
           <figure className="nav__img--mask">
-            <img className="nav__img" src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400&auto=format&fit=crop" alt="logo" />
-          </figure>
+  <img
+    className="nav__img"
+    src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
+    alt="logo"
+  />
+
+  <h2 className="nav__logo--text">
+    Summarist
+  </h2>
+</figure>
 
           <ul className="nav__list--wrapper">
             <li
