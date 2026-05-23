@@ -1734,3 +1734,164 @@ button:disabled {
   position: relative;
   z-index: 1;
 }
+
+.sidebar__toggle {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .books__grid {
+    justify-items: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 12px 16px;
+    display: block;
+  }
+
+  .sidebar__logo {
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 0;
+  }
+
+  .sidebar__toggle {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    background: #032b41;
+    color: white;
+    cursor: pointer;
+  }
+
+  .sidebar__links,
+  .sidebar__bottom {
+    display: none;
+  }
+
+  .sidebar--open .sidebar__links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 16px;
+  }
+
+  .sidebar--open .sidebar__bottom {
+    display: block;
+    margin-top: 12px;
+  }
+
+  .sidebar__links a,
+  .sidebar__disabled {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .page {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .searchbar {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .books__grid {
+    grid-template-columns:
+      repeat(auto-fit, minmax(180px, 196px));
+    justify-content: center;
+    justify-items: center;
+  }
+
+  .selected__card {
+    width: 100%;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .selected__card--center {
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 16px 0;
+  }
+
+  .selected__card--audio {
+    justify-content: center;
+  }
+
+  .book__layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .book__info {
+    width: 100%;
+    max-width: 706px;
+  }
+
+  .book__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .book__image {
+    width: min(304px, 100%);
+    height: 280px;
+  }
+
+  .book__image img {
+    width: 176px;
+    height: 268px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 16px;
+  }
+
+  .section__title {
+    font-size: 24px;
+  }
+
+  .books__grid {
+    grid-template-columns: minmax(180px, 196px);
+  }
+
+  .book__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .book__buttons {
+    flex-direction: column;
+  }
+
+  .book__buttons button {
+    width: 100%;
+  }
+
+  .book__main--title {
+    font-size: 28px;
+  }
+
+  .book__main--subtitle {
+    font-size: 18px;
+  }
+}

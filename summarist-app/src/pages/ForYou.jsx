@@ -88,6 +88,42 @@ function ForYou() {
 
   const [loading, setLoading] =
     useState(true);
+  const [searchTerm, setSearchTerm] =
+    useState("");
+
+  const allBooks = [
+    selectedBook,
+    ...recommendedBooks,
+    ...suggestedBooks,
+  ].filter(Boolean);
+
+  const uniqueBooks = Array.from(
+    new Map(
+      allBooks.map((book) => [
+        book.id || book.title,
+        book,
+      ])
+    ).values()
+  );
+
+  const normalizedSearch =
+    searchTerm.trim().toLowerCase();
+
+  const searchResults = normalizedSearch
+    ? uniqueBooks.filter((book) =>
+        [
+          book.title,
+          book.author,
+          book.subTitle,
+        ]
+          .filter(Boolean)
+          .some((value) =>
+            value
+              .toLowerCase()
+              .includes(normalizedSearch)
+          )
+      )
+    : [];
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -182,9 +218,43 @@ function ForYou() {
       <Sidebar />
 
       <div className="page">
-        <SearchBar />
+        <SearchBar
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
 
-        {selectedBook && (
+        {normalizedSearch && (
+          <section
+            style={{
+              marginBottom: "64px",
+            }}
+          >
+            <h2 className="section__title">
+              Search Results
+            </h2>
+
+            <p className="section__subtitle">
+              {searchResults.length
+                ? `Found ${searchResults.length} matching book${
+                    searchResults.length === 1
+                      ? ""
+                      : "s"
+                  }`
+                : "No books found"}
+            </p>
+
+            <div className="books__grid">
+              {searchResults.map((book) => (
+                <BookCard
+                  key={book.id}
+                  book={book}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {!normalizedSearch && selectedBook && (
           <section
             style={{
               marginBottom: "64px",
@@ -249,6 +319,7 @@ function ForYou() {
           </section>
         )}
 
+        {!normalizedSearch && (
         <section
           style={{
             marginBottom: "64px",
@@ -271,7 +342,9 @@ function ForYou() {
             ))}
           </div>
         </section>
+        )}
 
+        {!normalizedSearch && (
         <section>
           <h2 className="section__title">
             Suggested Books
@@ -290,6 +363,7 @@ function ForYou() {
             ))}
           </div>
         </section>
+        )}
       </div>
     </>
   );
