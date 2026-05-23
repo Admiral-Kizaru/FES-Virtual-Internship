@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
+import SearchBar from "../components/SearchBar";
 
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -48,6 +49,8 @@ function Player() {
         <Sidebar />
 
         <div className="page">
+          <SearchBar />
+
           <Skeleton
             width="300px"
             height="40px"
@@ -93,6 +96,8 @@ function Player() {
         <Sidebar />
 
         <div className="page">
+          <SearchBar />
+
           <h1>Book not found</h1>
         </div>
       </>
@@ -104,6 +109,8 @@ function Player() {
       <Sidebar />
 
       <div className="page">
+        <SearchBar />
+
         <h1>{book.title}</h1>
 
         <h3>{book.author}</h3>

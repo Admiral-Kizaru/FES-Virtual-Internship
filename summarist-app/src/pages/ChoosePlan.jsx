@@ -1,11 +1,6 @@
-import Sidebar from "../components/Sidebar";
-
 function ChoosePlan() {
   return (
-    <>
-      <Sidebar />
-
-      <div className="page">
+      <div className="page page--sales">
         <h1>Choose Your Plan</h1>
 
         <p
@@ -121,7 +116,6 @@ function ChoosePlan() {
           </div>
         </div>
       </div>
-    </>
   );
 }
 

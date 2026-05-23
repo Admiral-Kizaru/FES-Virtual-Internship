@@ -3,10 +3,10 @@ import {
   FaBookmark,
   FaCog,
   FaSearch,
-  FaCrown,
   FaHeadphones,
   FaBars,
   FaTimes,
+  FaQuestionCircle,
 } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
@@ -84,10 +84,10 @@ function Sidebar() {
             <span>Settings</span>
           </Link>
 
-          <Link to="/choose-plan" onClick={closeMenu}>
-            <FaCrown />
-            <span>Choose Plan</span>
-          </Link>
+          <span className="sidebar__disabled">
+            <FaQuestionCircle />
+            <span>Help & Support</span>
+          </span>
         </div>
       </div>
 

@@ -21,6 +21,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 
 import Sidebar from "../components/Sidebar";
+import SearchBar from "../components/SearchBar";
 
 const fallbackBook = {
   id: "18tro3gle2p",
@@ -121,6 +122,12 @@ function Book() {
   };
 
   const handleSaveBook = () => {
+    if (!user) {
+      openAuthModal("login");
+
+      return;
+    }
+
     const savedBooks =
       JSON.parse(
         localStorage.getItem(
@@ -178,6 +185,8 @@ function Book() {
       <Sidebar />
 
       <div className="page">
+        <SearchBar />
+
         <div className="book__layout">
           <div className="book__info">
             <h1 className="book__main--title">
