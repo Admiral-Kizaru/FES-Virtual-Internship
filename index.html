@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Frontend developer portfolio featuring React, Vite, responsive UI, API integrations, and polished web experiences."
+    />
+    <title>Frontend Developer Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./portfolio.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Portfolio home">
+        <span class="brand-mark">AK</span>
+        <span>Admiral-Kizaru</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero-section">
+        <div class="hero-copy">
+          <p class="eyebrow">React • Vite • Responsive UI</p>
+          <h1>Building clean, usable web apps with sharp frontend detail.</h1>
+          <p class="hero-text">
+            A portfolio of internship projects focused on product flows,
+            API-backed interfaces, thoughtful styling, and responsive layouts
+            that feel clear from the first click.
+          </p>
+          <div class="hero-actions" aria-label="Portfolio actions">
+            <a class="button button-primary" href="#projects">View projects</a>
+            <a class="button button-secondary" href="#contact">Get in touch</a>
+          </div>
+        </div>
+
+        <div class="hero-preview" aria-label="Portfolio project preview">
+          <div class="browser-bar">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="preview-grid">
+            <article>
+              <span class="preview-label">React App</span>
+              <strong>Summarist</strong>
+              <p>Book discovery, auth modal, plan flow, and audio player UI.</p>
+            </article>
+            <article>
+              <span class="preview-label">AI Flow</span>
+              <strong>Skinstric</strong>
+              <p>Multi-step image analysis experience with API submission.</p>
+            </article>
+            <article>
+              <span class="preview-label">Landing Page</span>
+              <strong>Marketing UI</strong>
+              <p>Responsive product page with stats, reviews, and sections.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band">
+        <div class="stat">
+          <strong>3</strong>
+          <span>Featured projects</span>
+        </div>
+        <div class="stat">
+          <strong>React 19</strong>
+          <span>Modern app stack</span>
+        </div>
+        <div class="stat">
+          <strong>API</strong>
+          <span>Real data integrations</span>
+        </div>
+      </section>
+
+      <section class="section" id="projects">
+        <div class="section-heading">
+          <p class="eyebrow">Selected work</p>
+          <h2>Projects that show the full frontend workflow.</h2>
+        </div>
+
+        <div class="project-list">
+          <article class="project-card featured-project">
+            <div class="project-media project-media-image">
+              <img
+                src="./summarist-app/src/assets/hero.png"
+                alt="Summarist reading app interface preview"
+              />
+            </div>
+            <div class="project-content">
+              <div>
+                <p class="project-kicker">React application</p>
+                <h3>Summarist App</h3>
+                <p>
+                  A book summary experience with routed pages for home,
+                  personalized recommendations, book detail views, audio
+                  playback, library, settings, plan selection, and authentication.
+                </p>
+              </div>
+              <ul class="tag-list" aria-label="Summarist technologies">
+                <li>React</li>
+                <li>Vite</li>
+                <li>React Router</li>
+                <li>API Fetching</li>
+              </ul>
+              <a
+                class="text-link"
+                href="https://github.com/Admiral-Kizaru/FES-Virtual-Internship/tree/main/summarist-app"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View source
+              </a>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-media project-media-ui">
+              <div class="skinstric-mock">
+                <span class="diamond diamond-one"></span>
+                <span class="diamond diamond-two"></span>
+                <span class="diamond diamond-three"></span>
+                <strong>Sophisticated<br />skincare</strong>
+              </div>
+            </div>
+            <div class="project-content">
+              <div>
+                <p class="project-kicker">Interactive product flow</p>
+                <h3>Skinstric AI Analysis</h3>
+                <p>
+                  A multi-step skincare analysis UI with typed identity flow,
+                  gallery and camera capture paths, loading states, demographic
+                  results, confidence scoring, and API requests.
+                </p>
+              </div>
+              <ul class="tag-list" aria-label="Skinstric technologies">
+                <li>React</li>
+                <li>File Uploads</li>
+                <li>Camera API</li>
+                <li>State Management</li>
+              </ul>
+              <a
+                class="text-link"
+                href="https://github.com/Admiral-Kizaru/FES-Virtual-Internship/tree/main/skinstric-app"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View source
+              </a>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-media project-media-image">
+              <img
+                src="./summarist-home-page/assets/landing.png"
+                alt="Summarist landing page preview"
+              />
+            </div>
+            <div class="project-content">
+              <div>
+                <p class="project-kicker">Responsive marketing page</p>
+                <h3>Summarist Home Page</h3>
+                <p>
+                  A static product landing page with navigation, hero content,
+                  feature panels, social proof, metrics, and footer sections
+                  styled for desktop and mobile breakpoints.
+                </p>
+              </div>
+              <ul class="tag-list" aria-label="Home page technologies">
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>Responsive Design</li>
+              </ul>
+              <a
+                class="text-link"
+                href="https://github.com/Admiral-Kizaru/FES-Virtual-Internship/tree/main/summarist-home-page"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View source
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section split-section" id="skills">
+        <div class="section-heading">
+          <p class="eyebrow">What I bring</p>
+          <h2>Frontend skills grounded in real app screens.</h2>
+        </div>
+
+        <div class="skill-grid">
+          <div>
+            <h3>Interface engineering</h3>
+            <p>
+              Component-based React screens, reusable page structure, routed
+              flows, loading states, and form validation.
+            </p>
+          </div>
+          <div>
+            <h3>Responsive styling</h3>
+            <p>
+              Mobile-first layout work, clear typography, stable spacing, and
+              product-focused CSS systems.
+            </p>
+          </div>
+          <div>
+            <h3>API integration</h3>
+            <p>
+              Fetching remote data, handling async states, submitting user input,
+              and keeping UI feedback visible during requests.
+            </p>
+          </div>
+          <div>
+            <h3>User experience</h3>
+            <p>
+              Polished interaction states, clear calls to action, predictable
+              navigation, and flows that help users keep moving.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-section" id="contact">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>Ready for GitHub Pages and your personal details.</h2>
+          <p>
+            Your GitHub source links are connected. Replace the LinkedIn and
+            email placeholders when you are ready to publish.
+          </p>
+        </div>
+
+        <div class="contact-links">
+          <a href="https://github.com/Admiral-Kizaru" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:your.email@example.com">Email</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Built for GitHub Pages.</span>
+      <a href="#top">Back to top</a>
+    </footer>
+  </body>
+</html>
