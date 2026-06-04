@@ -1,16 +1,43 @@
-# React + Vite
+# Summarist App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Summarist is a React book-summary platform built around the kind of flows a paid content product needs: discovery, search, protected pages, plan selection, authentication UI, library/settings screens, and an audio player experience.
 
-Currently, two official plugins are available:
+Live demo: https://fes-virtual-internship-coral.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Multi-page React application with routed home, recommendation, book detail, library, player, settings, and plan screens.
+- Search experience with debounced input and loading feedback.
+- Authentication modal and protected-route style flows.
+- Plan selection and subscription-oriented UI.
+- Reusable layout, sidebar, card, modal, and skeleton-loading components.
+- Responsive styling for desktop and mobile breakpoints.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the ESLint configuration
+- React
+- Vite
+- React Router
+- JavaScript ES6+
+- CSS
+- Vercel
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## What This Shows
+
+- Component-based frontend architecture.
+- API-backed product screens and async UI states.
+- User-flow thinking across discovery, purchase intent, and account areas.
+- Polished responsive interface work.
+
+## Run Locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```

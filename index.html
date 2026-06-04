@@ -1,263 +1,702 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Frontend developer portfolio featuring React, Vite, responsive UI, API integrations, and polished web experiences."
-    />
-    <title>Frontend Developer Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./portfolio.css" />
-  </head>
-  <body>
-    <header class="site-header">
-      <a class="brand" href="#top" aria-label="Portfolio home">
-        <span class="brand-mark">AK</span>
-        <span>Admiral-Kizaru</span>
-      </a>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Max Cortez — Frontend Software Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#ECE7DA;
+    --bg-warm:#F3E0DA;        /* peach tint for hero glow */
+    --card:#FBFAF5;
+    --card-2:#F4F1E8;
+    --ink:#15140F;
+    --ink-2:#54514633;
+    --muted:#5C5849;
+    --muted-2:#86826F;
+    --green:#13624A;
+    --green-bright:#0E7C57;
+    --violet:#7C5CFF;
+    --violet-deep:#5B3DE0;
+    --panel:#DAD6CB;
+    --line:rgba(20,19,15,0.10);
+    --line-soft:rgba(20,19,15,0.06);
+    --maxw:1120px;
+    --ease:cubic-bezier(.2,.7,.2,1);
+  }
 
-      <nav class="nav-links" aria-label="Primary navigation">
-        <a href="#projects">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:"Hanken Grotesk",system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--green);color:#F3EFE4;}
 
-    <main id="top">
-      <section class="hero-section">
-        <div class="hero-copy">
-          <p class="eyebrow">React • Vite • Responsive UI</p>
-          <h1>Building clean, usable web apps with sharp frontend detail.</h1>
-          <p class="hero-text">
-            A portfolio of internship projects focused on product flows,
-            API-backed interfaces, thoughtful styling, and responsive layouts
-            that feel clear from the first click.
-          </p>
-          <div class="hero-actions" aria-label="Portfolio actions">
-            <a class="button button-primary" href="#projects">View projects</a>
-            <a class="button button-secondary" href="#contact">Get in touch</a>
+  /* soft warm gradient field over whole page */
+  .field{
+    position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background:
+      radial-gradient(70% 55% at 86% 4%, var(--bg-warm) 0%, rgba(243,224,218,0) 55%),
+      radial-gradient(60% 50% at 4% 100%, #E6F0E5 0%, rgba(230,240,229,0) 60%),
+      var(--bg);
+  }
+  /* drifting violet blob */
+  .blob{
+    position:fixed;z-index:-1;pointer-events:none;
+    width:46vw;height:46vw;max-width:680px;max-height:680px;
+    right:-8vw;top:2vh;border-radius:50%;
+    background:radial-gradient(circle at 40% 40%, rgba(124,92,255,.20), rgba(124,92,255,0) 62%);
+    filter:blur(6px);
+    animation:blobDrift 22s var(--ease) infinite alternate;
+  }
+  @keyframes blobDrift{
+    0%{transform:translate(0,0) scale(1);}
+    100%{transform:translate(-6vw,7vh) scale(1.12);}
+  }
+  /* grain */
+  .grain{
+    position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* scroll progress */
+  .progress{
+    position:fixed;top:0;left:0;height:3px;width:0%;z-index:10000;
+    background:linear-gradient(90deg,var(--green),var(--violet));
+    transition:width .08s linear;
+  }
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+
+  /* ===================== NAV ===================== */
+  header.nav{
+    position:fixed;top:0;left:0;right:0;z-index:9000;
+    transition:background .4s var(--ease), box-shadow .4s var(--ease), padding .35s var(--ease);
+    padding:22px 0;
+  }
+  header.nav.solid{
+    background:rgba(236,231,218,.78);
+    backdrop-filter:blur(14px);
+    box-shadow:0 1px 0 var(--line);
+    padding:13px 0;
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);}
+  .mono-badge{
+    width:38px;height:38px;border-radius:9px;background:var(--ink);color:var(--card);
+    display:grid;place-items:center;font-weight:800;letter-spacing:.02em;font-size:15px;
+    transition:transform .5s var(--ease), background .4s var(--ease);
+  }
+  .brand:hover .mono-badge{transform:rotate(-8deg) scale(1.05);background:var(--green);}
+  .brand-name{font-weight:800;font-size:16px;letter-spacing:-.01em;}
+  .brand-name small{display:block;font-weight:500;font-size:11.5px;color:var(--muted-2);letter-spacing:.02em;margin-top:-2px;}
+  nav.links{display:flex;gap:6px;align-items:center;}
+  nav.links a{
+    text-decoration:none;color:var(--ink);font-weight:600;font-size:14.5px;
+    padding:9px 14px;border-radius:8px;position:relative;transition:color .25s;
+  }
+  nav.links a::after{
+    content:"";position:absolute;left:14px;right:14px;bottom:6px;height:2px;
+    background:var(--green);transform:scaleX(0);transform-origin:left;
+    transition:transform .35s var(--ease);
+  }
+  nav.links a:hover{color:var(--green);}
+  nav.links a:hover::after{transform:scaleX(1);}
+  .nav-cta{
+    margin-left:8px;background:var(--green);color:#F3EFE4 !important;
+    padding:10px 16px !important;border-radius:9px;
+    box-shadow:0 6px 16px rgba(19,98,74,.28);
+    transition:transform .3s var(--ease), box-shadow .3s var(--ease), background .3s !important;
+  }
+  .nav-cta::after{display:none;}
+  .nav-cta:hover{transform:translateY(-2px);background:var(--green-bright)!important;box-shadow:0 10px 22px rgba(19,98,74,.34);}
+  .menu-btn{display:none;}
+
+  /* ===================== HERO ===================== */
+  .hero{padding:150px 0 40px;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:12.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--green);
+  }
+  .eyebrow .ln{width:26px;height:2px;background:var(--green);border-radius:2px;
+    transform-origin:left;animation:drawLine 1s var(--ease) .2s both;}
+  @keyframes drawLine{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+
+  .availability{
+    display:inline-flex;align-items:center;gap:9px;margin-bottom:24px;
+    background:var(--card);border:1px solid var(--line);border-radius:999px;
+    padding:7px 14px 7px 11px;font-size:13px;font-weight:600;color:var(--muted);
+    box-shadow:0 4px 14px rgba(20,19,15,.04);
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--green-bright);position:relative;}
+  .dot::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--green-bright);
+    animation:ping 1.8s var(--ease) infinite;}
+  @keyframes ping{0%{transform:scale(.6);opacity:.8;}100%{transform:scale(1.8);opacity:0;}}
+
+  h1.display{
+    font-size:clamp(44px,6vw,78px);
+    line-height:.96;letter-spacing:-.035em;font-weight:800;margin:14px 0 0;
+    text-wrap:balance;
+  }
+  h1.display .swap{position:relative;display:inline-block;color:var(--green);}
+  h1.display .swap::after{
+    content:"";position:absolute;left:0;right:0;bottom:.08em;height:.10em;border-radius:3px;
+    background:var(--violet);transform:scaleX(0);transform-origin:left;
+    animation:drawLine 1s var(--ease) 1s both;
+  }
+  .hero-sub{
+    margin:26px 0 0;max-width:480px;font-size:18px;line-height:1.55;color:var(--muted);
+  }
+  .hero-cta{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap;}
+  .btn{
+    border:none;cursor:pointer;text-decoration:none;font-family:inherit;
+    font-weight:700;font-size:15px;padding:14px 22px;border-radius:11px;
+    display:inline-flex;align-items:center;gap:9px;transition:transform .3s var(--ease),box-shadow .3s var(--ease),background .3s;
+  }
+  .btn-primary{background:var(--green);color:#F3EFE4;box-shadow:0 8px 20px rgba(19,98,74,.26);}
+  .btn-primary:hover{transform:translateY(-3px);background:var(--green-bright);box-shadow:0 14px 28px rgba(19,98,74,.32);}
+  .btn-ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);}
+  .btn-ghost:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(20,19,15,.08);border-color:var(--ink-2);}
+  .btn .arr{transition:transform .3s var(--ease);}
+  .btn:hover .arr{transform:translateX(4px);}
+
+  .meta-row{display:flex;gap:26px;margin-top:34px;flex-wrap:wrap;}
+  .meta-row .m{font-size:13.5px;color:var(--muted-2);display:flex;align-items:center;gap:8px;font-weight:600;}
+  .meta-row svg{opacity:.7;}
+
+  /* preview window */
+  .preview-stage{perspective:1400px;}
+  .window{
+    background:var(--card);border-radius:16px;border:1px solid var(--line);
+    box-shadow:0 30px 70px -30px rgba(20,19,15,.40), 0 6px 18px rgba(20,19,15,.06);
+    overflow:hidden;will-change:transform;transition:transform .25s var(--ease);
+    animation:floaty 7s ease-in-out infinite;
+  }
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+  .win-bar{display:flex;align-items:center;gap:7px;padding:13px 15px;border-bottom:1px solid var(--line-soft);}
+  .win-bar i{width:11px;height:11px;border-radius:50%;display:block;}
+  .win-bar i:nth-child(1){background:#F0655B;}
+  .win-bar i:nth-child(2){background:#F4BE4F;}
+  .win-bar i:nth-child(3){background:#5FC97E;}
+  .win-bar .url{margin-left:12px;font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--muted-2);}
+  .win-body{padding:14px;display:flex;flex-direction:column;gap:11px;}
+  .prow{
+    position:relative;border-radius:12px;padding:18px;overflow:hidden;cursor:default;
+    transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .prow:hover{transform:translateX(6px);}
+  .prow .tag{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.8;}
+  .prow h4{margin:4px 0 5px;font-size:19px;font-weight:800;letter-spacing:-.01em;}
+  .prow p{margin:0;font-size:12.5px;line-height:1.4;opacity:.85;}
+  .prow.a{background:linear-gradient(120deg,#E7E2D2,#DED8C4);color:var(--ink);}
+  .prow.b{background:linear-gradient(120deg,#143A2E,#1F6B4F);color:#EAF3EE;}
+  .prow.c{background:linear-gradient(120deg,#EDEAE0,#E2DECF);color:var(--ink);}
+  .prow .shine{position:absolute;top:0;left:-60%;width:50%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);
+    transform:skewX(-18deg);transition:left .6s var(--ease);}
+  .prow:hover .shine{left:130%;}
+
+  /* ===================== STATS ===================== */
+  .stats-band{margin:64px 0 0;}
+  .stats{
+    background:var(--panel);border-radius:18px;padding:46px 0;
+    display:grid;grid-template-columns:repeat(4,1fr);position:relative;overflow:hidden;
+  }
+  .stats::before{content:"";position:absolute;inset:0;background:
+    repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),var(--line) calc(25% - 1px) 25%);
+    pointer-events:none;}
+  .stat{padding:0 38px;}
+  .stat .num{font-size:46px;font-weight:800;letter-spacing:-.03em;line-height:1;}
+  .stat .lbl{margin-top:10px;font-size:14px;font-weight:600;color:var(--muted);}
+  .stat .num .u{color:var(--green);}
+
+  /* ===================== SECTION HEADER ===================== */
+  section{position:relative;}
+  .sec-pad{padding:96px 0;}
+  .sec-head{margin-bottom:48px;}
+  .sec-head h2{
+    font-size:clamp(30px,4vw,46px);line-height:1.02;letter-spacing:-.03em;font-weight:800;margin:14px 0 0;max-width:14ch;text-wrap:balance;
+  }
+
+  /* ===================== MARQUEE ===================== */
+  .marquee-sec{padding:30px 0 8px;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
+    background:linear-gradient(var(--card-2),var(--card-2));}
+  .marquee{display:flex;gap:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);}
+  .mtrack{display:flex;gap:14px;padding:14px 7px;flex:0 0 auto;animation:scrollX 34s linear infinite;}
+  .mtrack.rev{animation-direction:reverse;animation-duration:42s;}
+  .marquee:hover .mtrack{animation-play-state:paused;}
+  @keyframes scrollX{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  .chip{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;white-space:nowrap;
+    border:1px solid var(--line);background:var(--card);border-radius:11px;
+    padding:11px 17px;font-weight:700;font-size:15px;color:var(--ink);
+    transition:transform .3s var(--ease),border-color .3s,color .3s;
+  }
+  .chip:hover{transform:translateY(-3px);border-color:var(--green);color:var(--green);}
+  .chip .gd{width:8px;height:8px;border-radius:3px;background:var(--green);}
+  .chip .vd{background:var(--violet);}
+
+  /* ===================== WORK CARDS ===================== */
+  .work-list{display:flex;flex-direction:column;gap:22px;}
+  .proj{
+    display:grid;grid-template-columns:.92fr 1.08fr;gap:0;
+    background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+    transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s;
+  }
+  .proj:hover{transform:translateY(-6px);box-shadow:0 28px 56px -30px rgba(20,19,15,.34);border-color:var(--ink-2);}
+  .proj .visual{position:relative;min-height:330px;display:grid;place-items:center;overflow:hidden;}
+  .proj .visual.cream{background:linear-gradient(150deg,#EAE5D5,#E0DAC8);}
+  .proj .visual.white{background:#FCFBF7;}
+  .proj .info{padding:42px;display:flex;flex-direction:column;}
+  .proj .kicker{font-size:11.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted-2);}
+  .proj .info h3{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:8px 0 14px;}
+  .proj .info p{margin:0;font-size:15px;line-height:1.6;color:var(--muted);max-width:46ch;}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:26px;}
+  .tags span{font-size:12.5px;font-weight:600;color:var(--muted);background:var(--card-2);
+    border:1px solid var(--line);border-radius:8px;padding:6px 11px;transition:.3s var(--ease);}
+  .proj:hover .tags span{border-color:var(--green);color:var(--green);}
+  .src{margin-top:22px;display:inline-flex;align-items:center;gap:8px;color:var(--green);
+    font-weight:700;font-size:14.5px;text-decoration:none;width:fit-content;}
+  .src .arr{transition:transform .3s var(--ease);}
+  .src:hover .arr{transform:translate(3px,-3px);}
+  .project-links{display:flex;gap:16px;flex-wrap:wrap;margin-top:22px;}
+  .project-links .src{margin-top:0;}
+
+  /* violet isometric cube */
+  .cube{position:relative;width:230px;height:230px;transform-style:preserve-3d;
+    animation:cubeFloat 6s ease-in-out infinite;}
+  @keyframes cubeFloat{0%,100%{transform:translateY(0) rotate(0);}50%{transform:translateY(-14px);}}
+  .cube .face{position:absolute;width:170px;height:170px;border-radius:26px;left:30px;}
+  .cube .top{top:8px;border:2px solid rgba(20,19,15,.5);background:rgba(255,255,255,.25);
+    transform:rotateX(58deg) rotateZ(45deg);}
+  .cube .bottom{top:78px;background:linear-gradient(135deg,var(--violet),var(--violet-deep));
+    transform:rotateX(58deg) rotateZ(45deg);box-shadow:0 30px 60px -10px rgba(124,92,255,.6);}
+  .cube .pillar{position:absolute;left:113px;top:64px;width:2px;height:74px;background:var(--violet);opacity:.5;}
+
+  /* diamond skincare */
+  .diamond{position:relative;width:260px;height:260px;display:grid;place-items:center;}
+  .diamond .d{position:absolute;border:1px solid rgba(20,19,15,.22);transform:rotate(45deg);}
+  .diamond .d1{width:230px;height:230px;animation:spin 26s linear infinite;}
+  .diamond .d2{width:165px;height:165px;animation:spin 20s linear infinite reverse;}
+  .diamond .d3{width:100px;height:100px;animation:spin 14s linear infinite;}
+  @keyframes spin{to{transform:rotate(405deg);}}
+  .diamond .label{position:relative;text-align:center;font-size:24px;font-weight:600;line-height:1.2;color:var(--ink);}
+
+  /* mini browser */
+  .mini{width:78%;max-width:300px;background:#fff;border-radius:12px;border:1px solid var(--line);
+    box-shadow:0 18px 40px -20px rgba(20,19,15,.4);overflow:hidden;}
+  .mini .bar{display:flex;align-items:center;gap:6px;padding:9px 11px;border-bottom:1px solid var(--line-soft);}
+  .mini .bar i{width:7px;height:7px;border-radius:50%;background:#D7D3C8;}
+  .mini .pg{padding:18px;display:flex;flex-direction:column;gap:9px;}
+  .mini .ln{height:9px;border-radius:5px;background:#E6E2D6;}
+  .mini .ln.g{background:var(--green-bright);width:40%;}
+  .mini .ln.s{width:78%;}.mini .ln.s2{width:60%;}
+  .mini .fab{align-self:flex-end;width:34px;height:34px;border-radius:50%;background:var(--green-bright);
+    display:grid;place-items:center;color:#fff;margin-top:6px;animation:floaty 4s ease-in-out infinite;}
+
+  /* ===================== SKILLS + ABOUT ===================== */
+  .bring{display:grid;grid-template-columns:.9fr 1.1fr;gap:54px;align-items:start;}
+  .skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .skill{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;
+    transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s;position:relative;overflow:hidden;
+  }
+  .skill::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green);
+    transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);}
+  .skill:hover{transform:translateY(-5px);box-shadow:0 20px 40px -24px rgba(20,19,15,.3);border-color:var(--ink-2);}
+  .skill:hover::before{transform:scaleY(1);}
+  .skill .ic{width:40px;height:40px;border-radius:11px;background:var(--card-2);border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--green);margin-bottom:16px;}
+  .skill h4{margin:0 0 8px;font-size:18px;font-weight:800;letter-spacing:-.01em;}
+  .skill p{margin:0;font-size:13.5px;line-height:1.55;color:var(--muted);}
+
+  .about-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:34px;margin-top:18px;}
+  .about-card p{margin:0 0 14px;font-size:15px;line-height:1.65;color:var(--muted);}
+  .about-card p:last-child{margin-bottom:0;}
+  .about-card strong{color:var(--ink);font-weight:700;}
+
+  /* ===================== CONTACT ===================== */
+  .contact-sec{padding:40px 0 90px;}
+  .contact{
+    background:linear-gradient(140deg,#16382C,#0E4734 55%,#13624A);color:#EAF3EE;
+    border-radius:24px;padding:60px;position:relative;overflow:hidden;
+  }
+  .contact::after{content:"";position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;
+    background:radial-gradient(circle,rgba(124,92,255,.45),transparent 65%);}
+  .contact .kick{font-size:12.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#7FE3BE;}
+  .contact h2{font-size:clamp(30px,4vw,48px);font-weight:800;letter-spacing:-.03em;line-height:1.02;margin:14px 0 0;max-width:16ch;text-wrap:balance;position:relative;z-index:1;}
+  .contact p{margin:18px 0 0;font-size:16px;line-height:1.55;color:#BFE0D2;max-width:48ch;position:relative;z-index:1;}
+  .contact-links{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap;position:relative;z-index:1;}
+  .clink{
+    display:inline-flex;align-items:center;gap:10px;text-decoration:none;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:12px;
+    padding:14px 20px;color:#EAF3EE;font-weight:700;font-size:15px;
+    transition:transform .3s var(--ease),background .3s,border-color .3s;
+  }
+  .clink:hover{transform:translateY(-3px);background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35);}
+  .clink.primary{background:#EAF3EE;color:#13624A;}
+  .clink.primary:hover{background:#fff;}
+
+  /* ===================== FOOTER ===================== */
+  footer{border-top:1px solid var(--line);padding:34px 0;}
+  .foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+  .foot small{color:var(--muted-2);font-size:13px;font-weight:500;}
+  .totop{display:inline-flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;
+    transition:gap .3s var(--ease);}
+  .totop:hover{gap:13px;color:var(--green);}
+
+  /* ===================== REVEAL ===================== */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
+  .reveal.in{opacity:1;transform:none;}
+  .reveal.d1{transition-delay:.08s;}
+  .reveal.d2{transition-delay:.16s;}
+  .reveal.d3{transition-delay:.24s;}
+  .reveal.d4{transition-delay:.32s;}
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;}
+    .reveal{opacity:1;transform:none;}
+  }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:40px;}
+    .bring{grid-template-columns:1fr;gap:32px;}
+    .proj{grid-template-columns:1fr;}
+    .proj .visual{min-height:240px;}
+    .proj .info{padding:30px;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .stats::before{display:none;}
+    nav.links{display:none;}
+    .hero{padding:120px 0 20px;}
+  }
+  @media (max-width:560px){
+    .stats{grid-template-columns:1fr;gap:28px;padding:36px 0;}
+    .stats::before{display:none;}
+    .stat{padding:0 28px;}
+    .skill-grid{grid-template-columns:1fr;}
+    .contact{padding:36px 26px;}
+    .sec-pad{padding:64px 0;}
+  }
+</style>
+</head>
+<body>
+<div class="field"></div>
+<div class="blob"></div>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <span class="mono-badge">MC</span>
+      <span class="brand-name">Max Cortez<small>Frontend Software Engineer</small></span>
+    </a>
+    <nav class="links">
+      <a href="#work">Work</a>
+      <a href="#stack">Stack</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact" class="nav-cta">Get in touch</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="availability reveal"><span class="dot"></span>Open to junior frontend roles</span>
+      <div class="reveal d1"><span class="eyebrow"><span class="ln"></span>React · Vite · REST APIs</span></div>
+      <h1 class="display reveal d1">Building clean, usable web apps with <span class="swap">sharp frontend detail.</span></h1>
+      <p class="hero-sub reveal d2">Frontend portfolio focused on API-backed React flows, authentication, responsive UI, and product screens that feel clear from the first click.</p>
+      <div class="hero-cta reveal d3">
+        <a href="#work" class="btn btn-primary">View projects <span class="arr">→</span></a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+      <div class="meta-row reveal d4">
+        <span class="m"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>Los Angeles, CA</span>
+        <span class="m"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 8v8M8 8l4 5 4-5v8"/></svg>github.com/Admiral-Kizaru</span>
+      </div>
+    </div>
+
+    <div class="preview-stage">
+      <div class="window" id="win">
+        <div class="win-bar">
+          <i></i><i></i><i></i>
+          <span class="url">max-cortez.dev/work</span>
+        </div>
+        <div class="win-body">
+          <div class="prow a"><span class="shine"></span><span class="tag">React App</span><h4>Summarist</h4><p>Book discovery, auth modal, plan flow, and audio player UI.</p></div>
+          <div class="prow b"><span class="shine"></span><span class="tag">AI Flow</span><h4>Skinstric</h4><p>Multi-step image analysis experience with API submission.</p></div>
+          <div class="prow c"><span class="shine"></span><span class="tag">Marketplace</span><h4>NFT Marketplace</h4><p>Collection browsing, filtering, routing, and responsive cards.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="wrap stats-band">
+    <div class="stats reveal">
+      <div class="stat"><div class="num"><span class="count" data-to="4">0</span></div><div class="lbl">Featured projects</div></div>
+      <div class="stat"><div class="num"><span class="count" data-to="18">0</span><span class="u">+</span></div><div class="lbl">Public repositories</div></div>
+      <div class="stat"><div class="num"><span class="u">API</span></div><div class="lbl">Real data integrations</div></div>
+      <div class="stat"><div class="num"><span class="u">TS</span></div><div class="lbl">Next skill focus</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section class="marquee-sec" id="stack">
+  <div class="marquee">
+    <div class="mtrack" id="track1"></div>
+    <div class="mtrack" id="track1b"></div>
+  </div>
+  <div class="marquee">
+    <div class="mtrack rev" id="track2"></div>
+    <div class="mtrack rev" id="track2b"></div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="sec-pad" id="work">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="ln"></span>Selected work</span>
+      <h2>Projects that show the full frontend workflow.</h2>
+    </div>
+
+    <div class="work-list">
+      <!-- 1 -->
+      <article class="proj reveal">
+        <div class="visual cream">
+          <div class="cube">
+            <div class="face top"></div>
+            <div class="pillar"></div>
+            <div class="face bottom"></div>
           </div>
         </div>
-
-        <div class="hero-preview" aria-label="Portfolio project preview">
-          <div class="browser-bar">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div class="preview-grid">
-            <article>
-              <span class="preview-label">React App</span>
-              <strong>Summarist</strong>
-              <p>Book discovery, auth modal, plan flow, and audio player UI.</p>
-            </article>
-            <article>
-              <span class="preview-label">AI Flow</span>
-              <strong>Skinstric</strong>
-              <p>Multi-step image analysis experience with API submission.</p>
-            </article>
-            <article>
-              <span class="preview-label">Landing Page</span>
-              <strong>Marketing UI</strong>
-              <p>Responsive product page with stats, reviews, and sections.</p>
-            </article>
+        <div class="info">
+          <span class="kicker">React Application</span>
+          <h3>Summarist App</h3>
+          <p>A book-summary experience with routed pages for home, personalized recommendations, book detail views, audio playback, library, settings, plan selection, and authentication.</p>
+          <div class="tags"><span>React</span><span>Vite</span><span>React Router</span><span>API Fetching</span></div>
+          <div class="project-links">
+            <a class="src" href="https://fes-virtual-internship-coral.vercel.app" target="_blank" rel="noopener">Live demo <span class="arr">↗</span></a>
+            <a class="src" href="https://github.com/Admiral-Kizaru/FES-Virtual-Internship/tree/main/summarist-app" target="_blank" rel="noopener">Source <span class="arr">↗</span></a>
           </div>
         </div>
-      </section>
+      </article>
 
-      <section class="section band">
-        <div class="stat">
-          <strong>3</strong>
-          <span>Featured projects</span>
-        </div>
-        <div class="stat">
-          <strong>React 19</strong>
-          <span>Modern app stack</span>
-        </div>
-        <div class="stat">
-          <strong>API</strong>
-          <span>Real data integrations</span>
-        </div>
-      </section>
-
-      <section class="section" id="projects">
-        <div class="section-heading">
-          <p class="eyebrow">Selected work</p>
-          <h2>Projects that show the full frontend workflow.</h2>
-        </div>
-
-        <div class="project-list">
-          <article class="project-card featured-project">
-            <div class="project-media project-media-image">
-              <img
-                src="./summarist-app/src/assets/hero.png"
-                alt="Summarist reading app interface preview"
-              />
+      <!-- 4 -->
+      <article class="proj reveal">
+        <div class="visual white">
+          <div class="mini">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <div class="pg">
+              <div class="ln g"></div>
+              <div class="ln s2"></div>
+              <div class="ln s"></div>
+              <div class="ln s2"></div>
+              <div class="fab"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></div>
             </div>
-            <div class="project-content">
-              <div>
-                <p class="project-kicker">React application</p>
-                <h3>Summarist App</h3>
-                <p>
-                  A book summary experience with routed pages for home,
-                  personalized recommendations, book detail views, audio
-                  playback, library, settings, plan selection, and authentication.
-                </p>
-              </div>
-              <ul class="tag-list" aria-label="Summarist technologies">
-                <li>React</li>
-                <li>Vite</li>
-                <li>React Router</li>
-                <li>API Fetching</li>
-              </ul>
-              <a
-                class="text-link"
-                href="https://github.com/Admiral-Kizaru/FES-Virtual-Internship/tree/main/summarist-app"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View source
-              </a>
-            </div>
-          </article>
-
-          <article class="project-card">
-            <div class="project-media project-media-ui">
-              <div class="skinstric-mock">
-                <span class="diamond diamond-one"></span>
-                <span class="diamond diamond-two"></span>
-                <span class="diamond diamond-three"></span>
-                <strong>Sophisticated<br />skincare</strong>
-              </div>
-            </div>
-            <div class="project-content">
-              <div>
-                <p class="project-kicker">Interactive product flow</p>
-                <h3>Skinstric AI Analysis</h3>
-                <p>
-                  A multi-step skincare analysis UI with typed identity flow,
-                  gallery and camera capture paths, loading states, demographic
-                  results, confidence scoring, and API requests.
-                </p>
-              </div>
-              <ul class="tag-list" aria-label="Skinstric technologies">
-                <li>React</li>
-                <li>File Uploads</li>
-                <li>Camera API</li>
-                <li>State Management</li>
-              </ul>
-              <a
-                class="text-link"
-                href="https://github.com/Admiral-Kizaru/FES-Virtual-Internship/tree/main/skinstric-app"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View source
-              </a>
-            </div>
-          </article>
-
-          <article class="project-card">
-            <div class="project-media project-media-image">
-              <img
-                src="./summarist-home-page/assets/landing.png"
-                alt="Summarist landing page preview"
-              />
-            </div>
-            <div class="project-content">
-              <div>
-                <p class="project-kicker">Responsive marketing page</p>
-                <h3>Summarist Home Page</h3>
-                <p>
-                  A static product landing page with navigation, hero content,
-                  feature panels, social proof, metrics, and footer sections
-                  styled for desktop and mobile breakpoints.
-                </p>
-              </div>
-              <ul class="tag-list" aria-label="Home page technologies">
-                <li>HTML</li>
-                <li>CSS</li>
-                <li>Responsive Design</li>
-              </ul>
-              <a
-                class="text-link"
-                href="https://github.com/Admiral-Kizaru/FES-Virtual-Internship/tree/main/summarist-home-page"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View source
-              </a>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section split-section" id="skills">
-        <div class="section-heading">
-          <p class="eyebrow">What I bring</p>
-          <h2>Frontend skills grounded in real app screens.</h2>
-        </div>
-
-        <div class="skill-grid">
-          <div>
-            <h3>Interface engineering</h3>
-            <p>
-              Component-based React screens, reusable page structure, routed
-              flows, loading states, and form validation.
-            </p>
-          </div>
-          <div>
-            <h3>Responsive styling</h3>
-            <p>
-              Mobile-first layout work, clear typography, stable spacing, and
-              product-focused CSS systems.
-            </p>
-          </div>
-          <div>
-            <h3>API integration</h3>
-            <p>
-              Fetching remote data, handling async states, submitting user input,
-              and keeping UI feedback visible during requests.
-            </p>
-          </div>
-          <div>
-            <h3>User experience</h3>
-            <p>
-              Polished interaction states, clear calls to action, predictable
-              navigation, and flows that help users keep moving.
-            </p>
           </div>
         </div>
-      </section>
-
-      <section class="section contact-section" id="contact">
-        <div>
-          <p class="eyebrow">Contact</p>
-          <h2>Ready for GitHub Pages and your personal details.</h2>
-          <p>
-            Your GitHub source links are connected. Replace the LinkedIn and
-            email placeholders when you are ready to publish.
-          </p>
+        <div class="info">
+          <span class="kicker">Planned Capstone Project</span>
+          <h3>ShiftLog</h3>
+          <p>A mobile-first incident reporting and shift handover tool for security personnel, planned with React, TypeScript, Firebase Auth, Firestore real-time updates, Jest tests, and GitHub Actions CI.</p>
+          <div class="tags"><span>React</span><span>TypeScript</span><span>Firebase</span><span>Jest</span><span>CI</span></div>
+          <div class="project-links">
+            <a class="src" href="#contact">Discuss the build <span class="arr">→</span></a>
+          </div>
         </div>
+      </article>
 
-        <div class="contact-links">
-          <a href="https://github.com/Admiral-Kizaru" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a href="mailto:your.email@example.com">Email</a>
+      <!-- 2 -->
+      <article class="proj reveal">
+        <div class="visual white">
+          <div class="diamond">
+            <div class="d d1"></div><div class="d d2"></div><div class="d d3"></div>
+            <div class="label">Sophisticated<br/>skincare</div>
+          </div>
         </div>
-      </section>
-    </main>
+        <div class="info">
+          <span class="kicker">Interactive Product Flow</span>
+          <h3>Skinstric AI Analysis</h3>
+          <p>A multi-step skincare analysis UI with a typed identity flow, gallery and camera capture paths, loading states, demographic results, confidence scoring, and API requests.</p>
+          <div class="tags"><span>React</span><span>File Uploads</span><span>Camera API</span><span>State Management</span></div>
+          <div class="project-links">
+            <a class="src" href="https://figma-ashy-psi.vercel.app" target="_blank" rel="noopener">Live demo <span class="arr">↗</span></a>
+            <a class="src" href="https://github.com/Admiral-Kizaru/Figma" target="_blank" rel="noopener">Source <span class="arr">↗</span></a>
+          </div>
+        </div>
+      </article>
 
-    <footer class="site-footer">
-      <span>Built for GitHub Pages.</span>
-      <a href="#top">Back to top</a>
-    </footer>
-  </body>
+      <!-- 3 -->
+      <article class="proj reveal">
+        <div class="visual cream">
+          <div class="mini">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <div class="pg">
+              <div class="ln g"></div>
+              <div class="ln s"></div>
+              <div class="ln s2"></div>
+              <div class="ln s"></div>
+              <div class="fab"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+            </div>
+          </div>
+        </div>
+        <div class="info">
+          <span class="kicker">React Marketplace UI</span>
+          <h3>NFT Marketplace</h3>
+          <p>A React marketplace experience with routed pages, reusable card components, collection browsing, filtering, sorting, search functionality, and responsive layouts.</p>
+          <div class="tags"><span>React</span><span>Dynamic Routing</span><span>Filtering</span><span>REST APIs</span></div>
+          <div class="project-links">
+            <a class="src" href="https://max-internship-fawn.vercel.app" target="_blank" rel="noopener">Live demo <span class="arr">↗</span></a>
+            <a class="src" href="https://github.com/Admiral-Kizaru/Max-internship" target="_blank" rel="noopener">Source <span class="arr">↗</span></a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS + ABOUT -->
+<section class="sec-pad" id="skills" style="padding-top:20px;">
+  <div class="wrap bring">
+    <div>
+      <div class="sec-head reveal" style="margin-bottom:24px;">
+        <span class="eyebrow"><span class="ln"></span>What I bring</span>
+        <h2>Frontend skills grounded in real app screens.</h2>
+      </div>
+      <div class="about-card reveal d1">
+        <p><strong>Frontend Software Engineer</strong> based in Los Angeles, building responsive React applications with JavaScript, Vite, REST APIs, authentication flows, and product-focused CSS.</p>
+        <p>Before tech, I worked in security operations, where clear handoffs, accurate incident records, and calm execution mattered every shift. That background shapes how I build interfaces: practical, readable, and designed for real workflows.</p>
+      </div>
+    </div>
+
+    <div class="skill-grid">
+      <div class="skill reveal d1">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+        <h4>Interface engineering</h4>
+        <p>Component-based React screens, reusable page structure, routed flows, loading states, and form validation.</p>
+      </div>
+      <div class="skill reveal d2">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></div>
+        <h4>Responsive styling</h4>
+        <p>Mobile-first layout work, clear typography, stable spacing, and product-focused CSS systems.</p>
+      </div>
+      <div class="skill reveal d2">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg></div>
+        <h4>API integration</h4>
+        <p>Fetching remote data, handling async states, submitting user input, and keeping UI feedback visible during requests.</p>
+      </div>
+      <div class="skill reveal d3">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg></div>
+        <h4>User experience</h4>
+        <p>Polished interaction states, clear calls to action, predictable navigation, and flows that help users keep moving.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-sec" id="contact">
+  <div class="wrap">
+    <div class="contact reveal">
+      <span class="kick">Contact</span>
+      <h2>Let's build something clear and usable together.</h2>
+      <p>Open to junior frontend roles in Los Angeles or remote. The fastest way to reach me is email — my GitHub and LinkedIn are below.</p>
+      <div class="contact-links">
+        <a class="clink primary" href="mailto:admiralaramaki7@gmail.com">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>Email me
+        </a>
+        <a class="clink" href="https://github.com/Admiral-Kizaru" target="_blank" rel="noopener">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.4-1.27.73-1.56-2.56-.3-5.25-1.28-5.25-5.7 0-1.26.45-2.3 1.2-3.1-.12-.3-.52-1.48.1-3.08 0 0 .98-.31 3.2 1.18a11 11 0 0 1 5.83 0c2.22-1.5 3.2-1.18 3.2-1.18.62 1.6.22 2.78.1 3.08.75.8 1.2 1.84 1.2 3.1 0 4.43-2.7 5.4-5.27 5.69.42.36.78 1.07.78 2.16v3.2c0 .31.2.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>GitHub
+        </a>
+        <a class="clink" href="https://www.linkedin.com/in/max-cortez-b2a884346/" target="_blank" rel="noopener">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.07 1.4-2.07 2.85V21H9z"/></svg>LinkedIn
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot">
+    <small>© 2026 Max Cortez · Built with hand-written HTML, CSS & JS.</small>
+    <a class="totop" href="#top">Back to top <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ---- scroll progress + nav solid ----
+  var nav=document.getElementById('nav'), prog=document.getElementById('progress');
+  function onScroll(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    prog.style.width=(h>0?(st/h*100):0)+'%';
+    nav.classList.toggle('solid', st>30);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  // ---- reveal on scroll ----
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.14, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+  // ---- count up ----
+  var cio=new IntersectionObserver(function(ents){
+    ents.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el=e.target, to=+el.dataset.to, t0=null, dur=1300;
+      function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/dur,1);
+        var eased=1-Math.pow(1-p,3);
+        el.textContent=Math.round(eased*to); if(p<1)requestAnimationFrame(step); }
+      requestAnimationFrame(step); cio.unobserve(el);
+    });
+  },{threshold:.5});
+  document.querySelectorAll('.count').forEach(function(el){cio.observe(el);});
+
+  // ---- preview window mouse parallax ----
+  var win=document.getElementById('win'), stage=win.closest('.preview-stage');
+  if(window.matchMedia('(min-width:901px)').matches){
+    stage.addEventListener('mousemove',function(ev){
+      var r=stage.getBoundingClientRect();
+      var x=(ev.clientX-r.left)/r.width-.5, y=(ev.clientY-r.top)/r.height-.5;
+      win.style.transform='rotateY('+(x*9)+'deg) rotateX('+(-y*9)+'deg) translateZ(10px)';
+    });
+    stage.addEventListener('mouseleave',function(){ win.style.transform=''; });
+  }
+
+  // ---- marquee chips ----
+  var stack=[
+    ['React','g'],['Vite','g'],['JavaScript','g'],['TypeScript','g'],['Jest','v'],
+    ['React Testing Library','v'],['HTML5','v'],['CSS3','v'],['React Router','g'],['REST APIs','g'],
+    ['Firebase','v'],['Stripe','v'],['Google Cloud','g'],['Git & GitHub','v'],['Vercel','g'],
+    ['Responsive Design','v'],['Authentication','v'],['GitHub Actions','g'],['npm','v']
+  ];
+  function fill(id){
+    var t=document.getElementById(id); if(!t) return;
+    var html='';
+    stack.forEach(function(s){ html+='<span class="chip"><span class="gd '+(s[1]==='v'?'vd':'')+'"></span>'+s[0]+'</span>'; });
+    t.innerHTML=html;
+  }
+  ['track1','track1b','track2','track2b'].forEach(fill);
+})();
+</script>
+</body>
 </html>
