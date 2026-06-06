@@ -1,16 +1,44 @@
-# React + Vite
+# Summarist
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Summarist is a React book-summary platform built around the flows a paid content product needs: discovery, search, authentication, protected pages, plan selection, account settings, and audio playback.
 
-Currently, two official plugins are available:
+[Live Demo](https://fes-virtual-internship-coral.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Routed home, recommendation, book detail, player, settings, and plan screens.
+- Search with debounced input and loading feedback.
+- Authentication modal and protected user flows.
+- Subscription and plan-selection interface.
+- Reusable navigation, card, modal, and skeleton-loading components.
+- Responsive layouts for desktop and mobile screens.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Technology
 
-## Expanding the ESLint configuration
+- React
+- React Router
+- Vite
+- JavaScript ES6+
+- CSS3
+- REST API integration
+- Vercel
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## What This Project Demonstrates
+
+- Component-based frontend architecture.
+- API-backed interfaces and asynchronous UI states.
+- Product-flow thinking across discovery, account, and subscription screens.
+- Responsive, user-focused interface design.
+
+## Run Locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Production Build
+
+```bash
+npm run build
+```
