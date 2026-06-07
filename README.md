@@ -1,5 +1,7 @@
 # Summarist
 
+[![Summarist CI](https://github.com/Admiral-Kizaru/FES-Virtual-Internship/actions/workflows/summarist-ci.yml/badge.svg?branch=master)](https://github.com/Admiral-Kizaru/FES-Virtual-Internship/actions/workflows/summarist-ci.yml)
+
 Summarist is a React book-summary platform built around the flows a paid content product needs: discovery, search, authentication, protected pages, plan selection, account settings, and audio playback.
 
 [Live Demo](https://fes-virtual-internship-coral.vercel.app)
@@ -42,3 +44,11 @@ npm run dev
 ```bash
 npm run build
 ```
+
+## Tests
+
+```bash
+npm test
+```
+
+The Jest and React Testing Library suite verifies debounced search requests, rendered API results, book links, and empty-query behavior. GitHub Actions runs the tests and production build on every change to `master`.
