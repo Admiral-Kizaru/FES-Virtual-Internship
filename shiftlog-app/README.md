@@ -1,6 +1,6 @@
 # ShiftLog
 
-ShiftLog is a mobile-first incident reporting and shift handover tool for security personnel. It is designed around a real security-operations workflow: log an incident quickly, review what happened during the last shift, and hand off important context to a supervisor or incoming guard.
+ShiftLog is a mobile-first incident reporting and shift handover tool for security personnel. It replaces scattered paper logs, messages, and verbal briefings with one focused workflow for recording incidents, reviewing site activity, and passing critical context to the next shift.
 
 ## Portfolio Goal
 
@@ -10,21 +10,23 @@ This project exists to close three high-value junior frontend skill gaps:
 - Jest tests for validation and filtering logic.
 - GitHub Actions CI that runs tests and builds the app.
 
-## MVP Features
+## Current Demo
 
-- Current shift dashboard with active/open incident counts.
-- Log Incident form with typed fields for incident type, location, severity, and description.
-- Validation for required fields and useful descriptions.
-- Shift History list with severity filtering.
-- Handover summary for open incidents.
+- Demo authentication screen with site and guard context.
+- Start/end shift workflow and live shift metrics.
+- Fast incident form with typed fields, validation, automatic timestamp, guard, and site data.
+- Seven-day history with severity and incident-type filters.
+- Expandable incident details and color-coded severity status.
+- Priority-sorted handover report with generated summary.
+- Local persistence and BroadcastChannel cross-tab updates for a working real-time demo.
 - TypeScript interfaces for incident records and form state.
-- Jest test suite for validation, filtering, sorting, and handover summaries.
+- Jest test suite for validation, creation, date windows, filtering, sorting, and handover summaries.
 - GitHub Actions workflow for test/build checks.
 
 ## Planned Production Features
 
-- Firebase Auth for guard accounts.
-- Firestore incident storage with real-time `onSnapshot` updates.
+- Firebase Auth for production guard accounts.
+- Firestore storage with real-time `onSnapshot` updates replacing the demo persistence adapter.
 - Supervisor dashboard for reviewing high-severity incidents.
 - Photo attachments from camera or gallery.
 - PDF export for shift handover reports.
