@@ -214,8 +214,8 @@ function NavButton({ active, icon, label, badge, onClick }: { active: boolean; i
 }
 
 function Login({ onAuthenticate }: { onAuthenticate: (email: string, password: string, name: string, create: boolean) => Promise<void> }) {
-  const [email, setEmail] = useState("max.cortez@shiftlog.demo");
-  const [password, setPassword] = useState("shiftlog");
+  const [email, setEmail] = useState(firebaseEnabled ? "" : "max.cortez@shiftlog.demo");
+  const [password, setPassword] = useState(firebaseEnabled ? "" : "shiftlog");
   const [name, setName] = useState("Max Cortez");
   const [create, setCreate] = useState(false);
   const [error, setError] = useState("");
