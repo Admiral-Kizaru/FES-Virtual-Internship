@@ -37,3 +37,9 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Upload production build
+        uses: actions/upload-artifact@v4
+        with:
+          name: shiftlog-dist
+          path: shiftlog-app/dist

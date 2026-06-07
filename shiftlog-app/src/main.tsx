@@ -1,8 +1,21 @@
 import { StrictMode, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { createRoot } from "react-dom/client";
+import { HashRouter, useLocation, useNavigate } from "react-router-dom";
 import "./styles.css";
+import { IncidentFormFields } from "./components/IncidentFormFields";
+import { SeverityFilter } from "./components/SeverityFilter";
 import { demoIncidents, demoUser } from "./demoData";
+import {
+  addFirebaseIncident,
+  completeFirebaseHandover,
+  firebaseCreateAccount,
+  firebaseEnabled,
+  firebaseSignIn,
+  firebaseSignOut,
+  observeFirebaseUser,
+  subscribeToIncidents,
+} from "./firebase";
 import {
   buildHandoverSummary,
   createIncident,
@@ -14,10 +27,9 @@ import {
   validateIncidentDraft,
 } from "./incidentUtils";
 import { createRealtimeChannel, loadIncidents, loadShift, resetDemoStorage, saveIncidents, saveShift } from "./storage";
-import type { Incident, IncidentDraft, IncidentType, Severity, Shift, View } from "./types";
+import type { DemoUser, Incident, IncidentDraft, IncidentType, Severity, Shift, View } from "./types";
 
 const incidentTypes: IncidentType[] = ["disturbance", "maintenance", "access", "medical", "other"];
-const severityLevels: Severity[] = ["low", "medium", "high"];
 
 function Icon({ name }: { name: string }) {
   const paths: Record<string, ReactNode> = {
@@ -35,8 +47,10 @@ function Icon({ name }: { name: string }) {
 }
 
 function App() {
-  const [signedIn, setSignedIn] = useState(false);
-  const [view, setView] = useState<View>("dashboard");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const view = (location.pathname.slice(1) || "dashboard") as View;
+  const [currentUser, setCurrentUser] = useState<DemoUser | null>(null);
   const [incidents, setIncidents] = useState<Incident[]>(() => loadIncidents(demoIncidents));
   const [shift, setShift] = useState<Shift | null>(() => loadShift());
   const [severity, setSeverity] = useState<Severity | "all">("all");
@@ -46,6 +60,15 @@ function App() {
   const channelRef = useRef<BroadcastChannel | null>(null);
 
   useEffect(() => {
+    if (!firebaseEnabled) return;
+    return observeFirebaseUser(setCurrentUser);
+  }, []);
+
+  useEffect(() => {
+    if (firebaseEnabled) {
+      if (!currentUser) return;
+      return subscribeToIncidents(currentUser.siteId, setIncidents);
+    }
     channelRef.current = createRealtimeChannel();
     if (channelRef.current) {
       channelRef.current.onmessage = (event: MessageEvent<Incident[]>) => setIncidents(event.data);
@@ -58,7 +81,7 @@ function App() {
       channelRef.current?.close();
       window.removeEventListener("storage", onStorage);
     };
-  }, []);
+  }, [currentUser]);
 
   function updateIncidents(next: Incident[]) {
     setIncidents(next);
@@ -83,21 +106,23 @@ function App() {
     const next = { ...shift, endedAt: new Date().toISOString(), active: false };
     setShift(next);
     saveShift(next);
-    setView("handover");
+    navigate("/handover");
   }
 
-  function addIncident(incident: Incident) {
-    updateIncidents([incident, ...incidents]);
+  async function addIncident(incident: Incident) {
+    if (firebaseEnabled) await addFirebaseIncident(incident);
+    else updateIncidents([incident, ...incidents]);
     flash("Incident saved and synced.");
-    setView("dashboard");
+    navigate("/dashboard");
   }
 
-  function completeHandover() {
-    updateIncidents(incidents.map((incident) => ({ ...incident, handedOver: true })));
+  async function completeHandover() {
+    if (firebaseEnabled) await completeFirebaseHandover(incidents.map((incident) => incident.id));
+    else updateIncidents(incidents.map((incident) => ({ ...incident, handedOver: true })));
     setShift(null);
     saveShift(null);
     flash("Handover marked complete.");
-    setView("dashboard");
+    navigate("/dashboard");
   }
 
   function resetDemo() {
@@ -107,7 +132,22 @@ function App() {
     flash("Demo data restored.");
   }
 
-  if (!signedIn) return <Login onSignIn={() => setSignedIn(true)} />;
+  async function authenticate(email: string, password: string, name: string, create: boolean) {
+    const user = firebaseEnabled
+      ? create
+        ? await firebaseCreateAccount(email, password, name)
+        : await firebaseSignIn(email, password)
+      : demoUser;
+    setCurrentUser(user);
+    navigate("/dashboard");
+  }
+
+  async function logOut() {
+    if (firebaseEnabled) await firebaseSignOut();
+    setCurrentUser(null);
+  }
+
+  if (!currentUser) return <Login onAuthenticate={authenticate} />;
 
   const recent = sortNewestFirst(incidents).slice(0, 5);
   const sevenDayIncidents = incidentsWithinDays(incidents, 7);
@@ -120,22 +160,22 @@ function App() {
       <aside className="sidebar">
         <div className="brand"><span className="brand-mark"><Icon name="shield" /></span><span>ShiftLog<small>Security operations</small></span></div>
         <nav aria-label="Primary navigation">
-          <NavButton active={view === "dashboard"} icon="grid" label="Dashboard" onClick={() => setView("dashboard")} />
-          <NavButton active={view === "log"} icon="plus" label="Log incident" onClick={() => setView("log")} />
-          <NavButton active={view === "history"} icon="history" label="Shift history" onClick={() => setView("history")} />
-          <NavButton active={view === "handover"} icon="handover" label="Handover report" badge={openIncidents.length} onClick={() => setView("handover")} />
+          <NavButton active={view === "dashboard"} icon="grid" label="Dashboard" onClick={() => navigate("/dashboard")} />
+          <NavButton active={view === "log"} icon="plus" label="Log incident" onClick={() => navigate("/log")} />
+          <NavButton active={view === "history"} icon="history" label="Shift history" onClick={() => navigate("/history")} />
+          <NavButton active={view === "handover"} icon="handover" label="Handover report" badge={openIncidents.length} onClick={() => navigate("/handover")} />
         </nav>
         <div className="sidebar-foot">
-          <button className="user-chip" onClick={() => setSignedIn(false)}>
-            <span className="avatar">MC</span><span><strong>{demoUser.name}</strong><small>{demoUser.siteName}</small></span><Icon name="logout" />
+          <button className="user-chip" onClick={logOut}>
+            <span className="avatar">{currentUser.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}</span><span><strong>{currentUser.name}</strong><small>{currentUser.siteName}</small></span><Icon name="logout" />
           </button>
         </div>
       </aside>
 
       <main className="main">
         <header className="topbar">
-          <div><span className="live-dot" />Demo sync active</div>
-          <div className="top-actions"><button className="text-button" onClick={resetDemo}>Reset demo</button><span>{new Date().toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</span></div>
+          <div><span className="live-dot" />{firebaseEnabled ? "Firestore sync active" : "Demo sync active"}</div>
+          <div className="top-actions">{!firebaseEnabled && <button className="text-button" onClick={resetDemo}>Reset demo</button>}<span>{new Date().toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</span></div>
         </header>
         {notice && <div className="toast"><Icon name="check" />{notice}</div>}
 
@@ -147,11 +187,11 @@ function App() {
             highOpen={highOpen}
             onStart={startShift}
             onEnd={endShift}
-            onLog={() => setView("log")}
-            onHistory={() => setView("history")}
+            onLog={() => navigate("/log")}
+            onHistory={() => navigate("/history")}
           />
         )}
-        {view === "log" && <IncidentForm shiftActive={Boolean(shift?.active)} onSubmit={addIncident} />}
+        {view === "log" && <IncidentForm shiftActive={Boolean(shift?.active)} user={currentUser} onSubmit={addIncident} />}
         {view === "history" && (
           <History
             incidents={filtered}
@@ -173,9 +213,25 @@ function NavButton({ active, icon, label, badge, onClick }: { active: boolean; i
   return <button className={`nav-button ${active ? "active" : ""}`} onClick={onClick}><Icon name={icon} /><span>{label}</span>{badge ? <b>{badge}</b> : null}</button>;
 }
 
-function Login({ onSignIn }: { onSignIn: () => void }) {
+function Login({ onAuthenticate }: { onAuthenticate: (email: string, password: string, name: string, create: boolean) => Promise<void> }) {
   const [email, setEmail] = useState("max.cortez@shiftlog.demo");
   const [password, setPassword] = useState("shiftlog");
+  const [name, setName] = useState("Max Cortez");
+  const [create, setCreate] = useState(false);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      await onAuthenticate(email, password, name, create);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Unable to authenticate.");
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
     <main className="login-page">
       <section className="login-intro">
@@ -183,12 +239,14 @@ function Login({ onSignIn }: { onSignIn: () => void }) {
         <div><p className="eyebrow light">Clear records. Better handovers.</p><h1>Every shift starts with context.</h1><p>Incident reporting and shift handovers designed for the people actually working the site.</p></div>
         <div className="login-stats"><span><strong>3 taps</strong>to log an incident</span><span><strong>Live</strong>cross-tab updates</span><span><strong>7 days</strong>of shift history</span></div>
       </section>
-      <form className="login-panel" onSubmit={(event) => { event.preventDefault(); onSignIn(); }}>
-        <div><p className="eyebrow">Demo account</p><h2>Sign in to your site</h2><p>Use the prefilled credentials to explore ShiftLog.</p></div>
+      <form className="login-panel" onSubmit={submit}>
+        <div><p className="eyebrow">{firebaseEnabled ? "Secure account" : "Demo account"}</p><h2>{create ? "Create your site account" : "Sign in to your site"}</h2><p>{firebaseEnabled ? "Use your assigned site credentials." : "Use the prefilled credentials to explore ShiftLog."}</p></div>
+        {firebaseEnabled && create && <label>Name<input value={name} onChange={(event) => setName(event.target.value)} required /></label>}
         <label>Email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></label>
         <label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required /></label>
-        <button className="primary wide" type="submit">Sign in</button>
-        <p className="demo-note"><Icon name="radio" /> Portfolio demo mode. Firebase Auth can be enabled with environment credentials.</p>
+        {error && <p className="login-error">{error}</p>}
+        <button className="primary wide" type="submit" disabled={busy}>{busy ? "Working..." : create ? "Create account" : "Sign in"}</button>
+        {firebaseEnabled ? <button className="text-button" type="button" onClick={() => setCreate(!create)}>{create ? "Use an existing account" : "Create an account"}</button> : <p className="demo-note"><Icon name="radio" /> Portfolio demo mode. Firebase Auth activates when environment credentials are supplied.</p>}
       </form>
     </main>
   );
@@ -218,30 +276,23 @@ function Dashboard({ shift, recent, openCount, highOpen, onStart, onEnd, onLog, 
   );
 }
 
-function IncidentForm({ shiftActive, onSubmit }: { shiftActive: boolean; onSubmit: (incident: Incident) => void }) {
+function IncidentForm({ shiftActive, user, onSubmit }: { shiftActive: boolean; user: DemoUser; onSubmit: (incident: Incident) => Promise<void> }) {
   const [draft, setDraft] = useState<IncidentDraft>({ type: "access", location: "", severity: "medium", description: "" });
   const [errors, setErrors] = useState<string[]>([]);
   const timestamp = useMemo(() => new Date(), []);
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const nextErrors = validateIncidentDraft(draft);
     setErrors(nextErrors);
     if (nextErrors.length) return;
-    onSubmit(createIncident(draft, demoUser.id, demoUser.siteId, demoUser.name));
+    await onSubmit(createIncident(draft, user.id, user.siteId, user.name));
   }
   return (
     <div className="page narrow">
       <div className="page-heading"><div><p className="eyebrow">Incident entry</p><h1>Log an incident</h1><p>Capture the essentials now. Add only facts you observed or confirmed.</p></div><span className={`shift-pill ${shiftActive ? "on" : ""}`}>{shiftActive ? "Shift active" : "Shift not started"}</span></div>
       <form className="incident-form" onSubmit={submit}>
-        <div className="form-section"><div className="form-section-head"><span>01</span><div><h2>Classification</h2><p>How should this incident be routed?</p></div></div><div className="form-grid">
-          <label>Incident type<select value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value as IncidentType })}>{incidentTypes.map((item) => <option key={item} value={item}>{formatIncidentType(item)}</option>)}</select></label>
-          <label>Severity<select value={draft.severity} onChange={(e) => setDraft({ ...draft, severity: e.target.value as Severity })}>{severityLevels.map((item) => <option key={item} value={item}>{formatIncidentType(item as IncidentType)}</option>)}</select></label>
-        </div></div>
-        <div className="form-section"><div className="form-section-head"><span>02</span><div><h2>Location and details</h2><p>Be specific enough for the next shift to follow up.</p></div></div>
-          <label>Location<input value={draft.location} onChange={(e) => setDraft({ ...draft, location: e.target.value })} placeholder="Example: North lobby, loading dock" /></label>
-          <label>Description<textarea value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} placeholder="Describe what happened, actions taken, and who was notified." /><small>{draft.description.length} characters</small></label>
-        </div>
-        <div className="form-meta"><span><strong>Timestamp</strong>{timestamp.toLocaleString()}</span><span><strong>Guard</strong>{demoUser.name}</span><span><strong>Site</strong>{demoUser.siteName}</span></div>
+        <div className="form-section"><div className="form-section-head"><span>01</span><div><h2>Incident details</h2><p>Classify the event and record only confirmed facts.</p></div></div><IncidentFormFields draft={draft} onChange={setDraft} /></div>
+        <div className="form-meta"><span><strong>Timestamp</strong>{timestamp.toLocaleString()}</span><span><strong>Guard</strong>{user.name}</span><span><strong>Site</strong>{user.siteName}</span></div>
         {errors.length > 0 && <div className="error-box"><Icon name="alert" /><div><strong>Check the incident details</strong>{errors.map((error) => <span key={error}>{error}</span>)}</div></div>}
         <button className="primary wide" type="submit">Save incident</button>
       </form>
@@ -253,7 +304,7 @@ function History({ incidents, severity, type, expandedId, onSeverity, onType, on
   return (
     <div className="page">
       <div className="page-heading"><div><p className="eyebrow">Last 7 days</p><h1>Shift history</h1><p>Review and filter every incident recorded at Harbor Point.</p></div><span className="record-count">{incidents.length} records</span></div>
-      <div className="filters"><label>Severity<select value={severity} onChange={(e) => onSeverity(e.target.value as Severity | "all")}><option value="all">All severity</option>{severityLevels.map((item) => <option key={item} value={item}>{item}</option>)}</select></label><label>Type<select value={type} onChange={(e) => onType(e.target.value as IncidentType | "all")}><option value="all">All types</option>{incidentTypes.map((item) => <option key={item} value={item}>{item}</option>)}</select></label></div>
+      <div className="filters"><SeverityFilter value={severity} onChange={onSeverity} /><label>Type<select value={type} onChange={(e) => onType(e.target.value as IncidentType | "all")}><option value="all">All types</option>{incidentTypes.map((item) => <option key={item} value={item}>{item}</option>)}</select></label></div>
       <section className="history-list">{incidents.length ? incidents.map((incident) => <IncidentRow key={incident.id} incident={incident} expanded={expandedId === incident.id} onClick={() => onExpand(expandedId === incident.id ? null : incident.id)} />) : <div className="empty-state"><Icon name="history" /><h2>No incidents match</h2><p>Try changing the severity or type filter.</p></div>}</section>
     </div>
   );
@@ -281,4 +332,4 @@ function Handover({ incidents, shift, onComplete }: { incidents: Incident[]; shi
   );
 }
 
-createRoot(document.getElementById("root")!).render(<StrictMode><App /></StrictMode>);
+createRoot(document.getElementById("root")!).render(<StrictMode><HashRouter><App /></HashRouter></StrictMode>);

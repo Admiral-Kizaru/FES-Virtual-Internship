@@ -1,44 +1,28 @@
 # ShiftLog
 
-ShiftLog is a mobile-first incident reporting and shift handover tool for security personnel. It replaces scattered paper logs, messages, and verbal briefings with one focused workflow for recording incidents, reviewing site activity, and passing critical context to the next shift.
+[![ShiftLog CI](https://github.com/Admiral-Kizaru/FES-Virtual-Internship/actions/workflows/shiftlog-ci.yml/badge.svg)](https://github.com/Admiral-Kizaru/FES-Virtual-Internship/actions/workflows/shiftlog-ci.yml)
 
-## Portfolio Goal
+ShiftLog is a mobile-first incident reporting and shift handover tool for security personnel. It replaces paper logs, scattered messages, and verbal briefings with one focused workflow for recording incidents and passing critical context to the next shift.
 
-This project exists to close three high-value junior frontend skill gaps:
+- [Live demo](https://admiral-kizaru.github.io/shiftlog/)
+- [Source code](https://github.com/Admiral-Kizaru/FES-Virtual-Internship/tree/main/shiftlog-app)
 
-- TypeScript in a real React application.
-- Jest tests for validation and filtering logic.
-- GitHub Actions CI that runs tests and builds the app.
+## Features
 
-## Current Demo
-
-- Demo authentication screen with site and guard context.
+- Email/password authentication and site assignment when Firebase is configured.
+- Portfolio demo mode when Firebase credentials are absent.
 - Start/end shift workflow and live shift metrics.
-- Fast incident form with typed fields, validation, automatic timestamp, guard, and site data.
+- Incident form with type, location, severity, description, timestamp, guard, and site data.
+- Dashboard showing the five newest incidents.
 - Seven-day history with severity and incident-type filters.
-- Expandable incident details and color-coded severity status.
-- Priority-sorted handover report with generated summary.
-- Local persistence and BroadcastChannel cross-tab updates for a working real-time demo.
-- TypeScript interfaces for incident records and form state.
-- Jest test suite for validation, creation, date windows, filtering, sorting, and handover summaries.
-- GitHub Actions workflow for test/build checks.
-
-## Planned Production Features
-
-- Firebase Auth for production guard accounts.
-- Firestore storage with real-time `onSnapshot` updates replacing the demo persistence adapter.
-- Supervisor dashboard for reviewing high-severity incidents.
-- Photo attachments from camera or gallery.
-- PDF export for shift handover reports.
+- Expandable incident details and severity status.
+- Priority-sorted handover report.
+- Firestore `onSnapshot` updates in production and cross-tab demo updates with `BroadcastChannel`.
+- React Router navigation, TypeScript, Jest, React Testing Library, and GitHub Actions CI.
 
 ## Stack
 
-- React
-- TypeScript
-- Vite
-- Firebase-ready architecture
-- Jest
-- GitHub Actions
+React, TypeScript, Vite, React Router v6, Firebase Auth, Cloud Firestore, Jest, React Testing Library, and GitHub Actions.
 
 ## Run Locally
 
@@ -47,14 +31,23 @@ npm install
 npm run dev
 ```
 
-## Test
+Without an `.env` file, the app starts in demo mode using the prefilled login.
+
+## Firebase Setup
+
+1. Copy `.env.example` to `.env` and add the Firebase web-app values.
+2. Enable Email/Password authentication in Firebase Authentication.
+3. Create a Cloud Firestore database.
+4. Deploy the included security rules with `firebase deploy --only firestore:rules`.
+5. Run `npm run dev` and create the first guard account.
+
+User profiles are stored in `users/{uid}` with their assigned `siteId`. Incident reads and writes are restricted to authenticated users assigned to the same site.
+
+## Test And Build
 
 ```bash
 npm test
-```
-
-## Build
-
-```bash
 npm run build
 ```
+
+The test suite covers incident validation, creation, filtering, seven-day history, handover ordering and summaries, plus interactive incident-form and severity-filter controls.
